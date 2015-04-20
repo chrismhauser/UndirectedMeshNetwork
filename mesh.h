@@ -20,6 +20,7 @@ private:
     };
 
     // For grid - 4D array of nodes
+    std::vector<node> nodeGrid[256][256][256][256];
     // For mesh - hash table
 
 public:
