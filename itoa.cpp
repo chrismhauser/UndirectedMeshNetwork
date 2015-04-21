@@ -2,6 +2,9 @@
 #include <algorithm>
 
 // Citation: http://www.jb.man.ac.uk/~slowe/cpp/itoa.html
+
+// Had to define a custom itoa function because itoa isn't supported on all
+// compilers.
 char* itoa( int value, char* result, int base ) {
 
     // check that the base if valid

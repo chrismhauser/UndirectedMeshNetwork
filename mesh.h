@@ -6,6 +6,8 @@
 
 #include "ip.h"
 
+// Struct for adding specialization to std::hash, which doesn't support hashing
+// the object Ip.
 namespace std
 {
     template <>
