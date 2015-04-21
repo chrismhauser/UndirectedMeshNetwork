@@ -2,4 +2,6 @@
 
 Mesh::Mesh()
 {
+    // initialize mesh
+    // initialize grid
 }

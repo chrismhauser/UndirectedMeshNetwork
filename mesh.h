@@ -2,12 +2,26 @@
 #define MESH_H
 
 #include <vector>
+#include <unordered_map>
 
 #include "ip.h"
 
+// Struct for adding specialization to std::hash, which doesn't support hashing
+// the object Ip.
+namespace std
+{
+    template <>
+    struct hash<Ip>
+    {
+        size_t operator()(const Ip& ip) const
+        {
+            return (hash<int>()(ip.getIpNum(3)) ^ (hash<int>()(ip.getIpNum(4) << 1)) >> 1);
+        }
+    };
+}
+
 class Mesh
 {
-
 private:
     struct node {
         std::vector<node*> connectedNodes;
@@ -19,8 +33,8 @@ private:
         std::string data;
     };
 
-    // For grid - 4D array of nodes
-    // For mesh - hash table
+    std::vector<std::vector<node>> nodeGrid;
+    std::unordered_map<Ip, node> nodeMap;
 
 public:
     Mesh();
