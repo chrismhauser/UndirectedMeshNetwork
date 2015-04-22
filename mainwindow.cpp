@@ -1,10 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <cstdlib>
-#include <iostream>
-#include <string>
-
 #include "ip.h"
 
 MainWindow::MainWindow(QWidget *parent) :

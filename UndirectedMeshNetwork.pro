@@ -15,13 +15,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     mesh.cpp \
-    ip.cpp \
-    itoa.cpp
+    ip.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
     ip.h
 
 FORMS    += mainwindow.ui
-
-CONFIG += c++11
