@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     mesh.cpp \
-    ip.cpp
+    ip.cpp \
+    node.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
-    ip.h
+    ip.h \
+    node.h
 
 FORMS    += mainwindow.ui

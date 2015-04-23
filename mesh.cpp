@@ -15,7 +15,7 @@ Mesh::Mesh(size_t ds_id, size_t size)
     }
 }
 
-void Mesh::generateGrid(int size = 256)
+void Mesh::generateGrid(size_t size /*= 256*/)
 {
     /* TODO generate grid of nodes (default size = 256)
      *  assign Ip addresses
@@ -23,7 +23,7 @@ void Mesh::generateGrid(int size = 256)
      */
 }
 
-void Mesh::generateMap(int size = 75)
+void Mesh::generateMap(size_t size /*= 75*/)
 {
     /* TODO generate map of nodes (default size = 75)
      *  assign Ip addresses
@@ -31,7 +31,7 @@ void Mesh::generateMap(int size = 75)
      */
 }
 
-Mesh::packet Mesh::generatePacket()
+Node::packet Mesh::generatePacket()
 {
     /* TODO
     *   choose random sender and reciever
@@ -40,7 +40,7 @@ Mesh::packet Mesh::generatePacket()
     */
 }
 
-void Mesh::sendPacket(packet message)
+void Mesh::sendPacket(Node::packet message)
 {
     currentMessage = message;
     // TODO if new path, have sender save path
@@ -53,9 +53,9 @@ void Mesh::resendPacket()
     sendPacket(currentMessage);
 }
 
-void Mesh::sendAck(node *sender, node *reciever, int packetId)
+void Mesh::sendAck(Node *sender, Node *reciever, int packetId)
 {
-    packet* ack = new ack;
+    Node::packet* ack = new Node::packet;
     ack->sender = reciever;
     ack->reciever = sender;
     ack->packetId = packetId;
