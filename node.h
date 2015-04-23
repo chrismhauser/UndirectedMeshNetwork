@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <QObject>
 
 class Node
 {
@@ -10,7 +11,7 @@ public:
     Node();
 
     struct packet {
-        Node* sender, reciever;
+        Node *sender, *reciever;
         int packetId;
         std::string data;
         // TODO time timeout
@@ -24,7 +25,7 @@ public:
         // TODO check packet timeout (discard if past, else forward)
         if (1) { // TODO if timeout is passed
             emit packetDiscarded();
-        } else if (message.reciever.address == this->address) {
+        } else if (message.reciever->address == this->address) {
             emit packetRecieved();
         } else {
             forwardPacket(message); // TODO add path

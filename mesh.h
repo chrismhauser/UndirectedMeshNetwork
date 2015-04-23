@@ -44,7 +44,7 @@ public:
 
     // TODO Queue findPath(Node* sender, Node* reciever);
     Node::packet generatePacket();
-    void sendPacket(packet message);
+    void sendPacket(Node::packet message);
 
 public slots:
     // on signal packetDiscarded
