@@ -3,11 +3,14 @@
 
 #include <vector>
 #include <unordered_map>
-
-#include <vector>
+#include <queue>
+#include <stack>
 
 #include "ip.h"
 #include "node.h"
+
+#define DS_ID_GRID 0
+#define DS_ID_MAP 1
 
 // Struct for adding specialization to std::hash, which doesn't support hashing
 // the object Ip.
@@ -33,25 +36,25 @@ private:
     void generateGrid(size_t size = 256);
     void generateMap(size_t size = 75);
 
-    Node::packet currentMessage;
+    void reversePath(std::queue<Ip>& path);
 
-    const size_t DS_ID_GRID = 0;
-    const size_t DS_ID_MAP = 1;
+    Node::packet currentMessage;
+    int DS_ID;
 
 public:
     Mesh();
     Mesh(size_t ds_id, size_t size);
 
-    // TODO Queue findPath(Node* sender, Node* reciever);
+    std::queue<Ip> findPath(Node* sender, Node* reciever);
     Node::packet generatePacket();
-    void sendPacket(Node::packet message);
+    void sendPacket(Node::packet* message);
 
 public slots:
     // on signal packetDiscarded
     void resendPacket();
 
     // on signal packetRecieved
-    void sendAck(Node* sender, Node* reciever, int packetId);
+    void sendAck(Node::packet* message);
 };
 
 #endif // MESH_H

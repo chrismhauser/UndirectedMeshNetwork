@@ -4,6 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <QObject>
+#include <queue>
+#include <time.h>
+
+#include "ip.h"
 
 class Node
 {
@@ -14,33 +18,19 @@ public:
         Node *sender, *reciever;
         int packetId;
         std::string data;
-        // TODO time timeout
+        time_t timout;
+        std::queue<Ip> path;
     };
 
     std::vector<Node*> connectedNodes;
     Ip address;
-    // TODO std::vector<Queue> previousPaths;
+    // TODO routing table (probably hash table or stack)
 
-    void forwardPacket(packet message) { // TODO add path parameter
-        // TODO check packet timeout (discard if past, else forward)
-        if (1) { // TODO if timeout is passed
-            emit packetDiscarded();
-        } else if (message.reciever->address == this->address) {
-            emit packetRecieved();
-        } else {
-            forwardPacket(message); // TODO add path
-        }
-
-    }
+    void forwardPacket(packet* message);
 
 signals:
-    void packetDiscarded(); // TODO add path parameter
-    void packetRecieved(); // TODO add path parameter
+    void packetDiscarded(packet* message);
+    void packetRecieved(packet* message);
 };
 
 #endif // NODE_H
-
-
-struct node {
-
-};
