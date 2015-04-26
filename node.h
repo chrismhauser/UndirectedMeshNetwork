@@ -24,6 +24,7 @@ public:
 
     std::vector<Node*> connectedNodes;
     Ip address;
+    int packetIndex;
     // TODO routing table (probably hash table or stack)
 
     void forwardPacket(packet* message);

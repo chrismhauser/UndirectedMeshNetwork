@@ -30,8 +30,11 @@ class Mesh
 {
 
 private:
-    std::vector<std::vector<Node> > nodeGrid;
+    Node** nodeGrid;
+    int gridSize;
+
     std::unordered_map<Ip, Node> nodeMap;
+    int mapSize;
 
     void generateGrid(size_t size = 256);
     void generateMap(size_t size = 75);
@@ -39,7 +42,7 @@ private:
     void reversePath(std::queue<Ip>& path);
 
     Node::packet currentMessage;
-    int DS_ID;
+    int CUR_DS_ID;
 
 public:
     Mesh();

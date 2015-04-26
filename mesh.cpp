@@ -8,11 +8,11 @@ Mesh::Mesh(size_t ds_id, size_t size)
     switch(ds_id)
     {
     case DS_ID_GRID:
-        DS_ID = DS_ID_GRID;
+        CUR_DS_ID = DS_ID_GRID;
         generateGrid(size);
         break;
     case DS_ID_MAP:
-        DS_ID = DS_ID_MAP;
+        CUR_DS_ID = DS_ID_MAP;
         generateMap(size);
         break;
     default:
@@ -27,6 +27,28 @@ void Mesh::generateGrid(size_t size /*= 256*/)
      *  assign Ip addresses
      *  connect node signals to mesh slots
      */
+
+    gridSize = size;
+    nodeGrid = new Node*[size];
+    for(int i=0; i<size; i++) {
+        nodeGrid[i] = new Node[size];
+        for(int j=0; j<size; j++) {
+            nodeGrid[i][j].address.setIp(0,0,i,j);
+
+            // Connect neighboring nodes (top and left)
+            if(i > 0) {
+                // connect both ways
+                nodeGrid[i][j].connectedNodes.push_back(&nodeGrid[i-1][j]);
+                nodeGrid[i-1][j].connectedNodes.push_back(&nodeGrid[i][j]);
+            }
+
+            if(j > 0) {
+                // connect both ways
+                nodeGrid[i][j].connectedNodes.push_back(&nodeGrid[i][j-1]);
+                nodeGrid[i][j-1].connectedNodes.push_back(&nodeGrid[i][j]);
+            }
+        }
+    }
 }
 
 void Mesh::generateMap(size_t size /*= 75*/)
@@ -60,14 +82,15 @@ void Mesh::reversePath(std::queue<Ip>& path)
 Node::packet Mesh::generatePacket()
 {
     /* TODO
-    *   choose random sender and reciever
+    *   choose random sender and reciever (grid - done, map - not done)
     *   set packetId
     *   set random data (for loop random # of times, str += "data")
     */
 
     Node::packet message;
 
-    switch(DS_ID)
+    // Choose random sender & reciever
+    switch(CUR_DS_ID)
     {
     case DS_ID_GRID:
       {
@@ -76,20 +99,20 @@ Node::packet Mesh::generatePacket()
         bool pass = false;
 
         // Randomize Sender
-        randX1 = rand() % nodeGrid.size();
-        randY1 = rand() % nodeGrid.at(randX1).size();
-        message.sender = &nodeGrid.at(randX1).at(randY1);
+        randX1 = rand() % gridSize;
+        randY1 = rand() % gridSize;
+        message.sender = &nodeGrid[randX1][randY1];
 
         // Make sure Sender and Reciever are different
         while(!pass) {
             // Randomize Reciever
-            randX2 = rand() % nodeGrid.size();
-            randY2 = rand() % nodeGrid.at(randX2).size();
+            randX2 = rand() % gridSize;
+            randY2 = rand() % gridSize;
 
             if(!(randX1 == randX2 && randY1 == randY2))
                 pass = true;
         }
-        message.reciever = &nodeGrid.at(randX2).at(randY2);
+        message.reciever = &nodeGrid[randX2][randY2];
 
         break;
       }
@@ -99,6 +122,8 @@ Node::packet Mesh::generatePacket()
         break;
       }
     }
+
+    message.packetId = message.sender->packetIndex;
 }
 
 void Mesh::sendPacket(Node::packet* message)
