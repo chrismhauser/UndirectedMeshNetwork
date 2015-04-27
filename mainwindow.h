@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <cstdlib>
 #include <iostream>
-#include <string>
+#include <string.h>
 
 namespace Ui {
 class MainWindow;

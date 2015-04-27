@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <queue>
 #include <stack>
+#include <algorithm>
+#include <iterator>
 
 #include "ip.h"
 #include "node.h"
