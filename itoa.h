@@ -1,3 +1,6 @@
+#ifndef ITOA_H
+#define ITOA_H
+
 #include <cstdlib>
 #include <algorithm>
 
@@ -44,3 +47,4 @@ char* itoa( int value, char* result, int base ) {
     return result;
 
 }
+#endif // ITOA_H

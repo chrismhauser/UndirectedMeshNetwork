@@ -22,6 +22,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     mesh.h \
     ip.h \
-    node.h
+    node.h \
+    itoa.h
 
 FORMS    += mainwindow.ui

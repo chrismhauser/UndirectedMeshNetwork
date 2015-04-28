@@ -19,7 +19,7 @@ public:
     void setIp(std::string ip);
     void setIp(int num1, int num2, int num3, int num4);
 
-    bool operator==(const Ip& rhs) {
+    bool operator==(const Ip& rhs) const {
         for(int i=0; i<4; i++) {
             if(this->ipNums[i] != rhs.getIpNum(i)) return false;
         }

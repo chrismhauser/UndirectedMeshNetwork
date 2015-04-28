@@ -66,12 +66,55 @@ void Mesh::generateGrid(size_t size /*= 256*/)
     }
 }
 
+// Generates a map of approximately size ^ 2 nodes (no size guarantee)
 void Mesh::generateMap(size_t size /*= 75*/)
 {
     /* TODO generate map of nodes (default size = 75)
      *  assign Ip addresses
      *  connect node signals to mesh slots
      */
+
+    mapSize = size ^ 2;
+    std::vector<std::vector<Node>> tempNodeVect;
+
+    // initialize size x size vector of nodes
+    tempNodeVect.resize(size);
+    for(int i = 0; i < size; i++) {
+        tempNodeVect[i].resize(size);
+    }
+
+    // ip assigning occurs the same as the mesh abstraction (shout out Chris H.)
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+             tempNodeVect[i][j].address.setIp(0,0,i,j);
+
+             // Unlike mesh, asymetric graph edges.  Average of 2.5 edges between a node and its peers.
+             // Note that with the randomization strategy, there is a small possibility of isolated nodes.
+             if (i > 0) {
+                 // .625% chance of connection with neighbor
+                 if ((rand() % 8 + 1) > 5)
+                    tempNodeVect[i][j].connectedNodes.push_back(&nodeGrid[i-1][j]);
+                 if ((rand() % 8 + 1) > 5)
+                    tempNodeVect[i-1][j].connectedNodes.push_back(&nodeGrid[i][j]);
+             }
+
+             if (j > 0) {
+                 if ((rand() % 8 + 1) > 5)
+                    tempNodeVect[i][j].connectedNodes.push_back(&nodeGrid[i][j-1]);
+                 if ((rand() % 8 + 1) > 5)
+                    tempNodeVect[i][j-1].connectedNodes.push_back(&nodeGrid[i][j]);
+             }
+        }
+    }
+
+    // Iterate through tempNodeVect and push non-isolated nodes to the map
+    for (size_t i = 0; i < size; i++) {
+        for (size_t j = 0; j < size; j++) {
+            if (tempNodeVect[i][j].connectedNodes.size() > 0) {
+                nodeMap[tempNodeVect[i][j].address] = tempNodeVect[i][j];
+            }
+        }
+  }
 }
 
 void Mesh::reversePath(std::queue<Ip>& path)
@@ -133,8 +176,26 @@ Node::packet* Mesh::generatePacket()
       }
     case DS_ID_MAP:
       {
+        bool pass = false;
+        auto randTuple1 = nodeMap.begin();
+        auto randTuple2 = nodeMap.begin();
+        int advanceCount1, advanceCount2;
 
-        break;
+         // Randomize sender
+        advanceCount1 = rand() % nodeMap.size();
+        std::advance(randTuple1, advanceCount1);
+        message.sender = &(randTuple1->second);
+
+        // Different sender and reciever
+        while(!pass) {
+            // Randomize reciever
+            advanceCount2 = rand() % nodeMap.size();
+            std::advance(randTuple2, advanceCount2);
+
+            if(!(advanceCount1 != advanceCount2))
+                pass = true;
+        }
+        message.reciever = &(randTuple2->second);
       }
     }
 
