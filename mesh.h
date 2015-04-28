@@ -14,20 +14,6 @@
 #define DS_ID_GRID 0
 #define DS_ID_MAP 1
 
-// Struct for adding specialization to std::hash, which doesn't support hashing
-// the object Ip.
-namespace std
-{
-    template <>
-    struct hash<Ip>
-    {
-        size_t operator()(const Ip& ip) const
-        {
-            return (hash<int>()(ip.getIpNum(3)) ^ (hash<int>()(ip.getIpNum(4) << 1)) >> 1);
-        }
-    };
-}
-
 class Mesh : public QObject
 {
     Q_OBJECT
