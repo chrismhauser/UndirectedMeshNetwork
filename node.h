@@ -9,8 +9,9 @@
 
 #include "ip.h"
 
-class Node
+class Node : public QObject
 {
+    Q_OBJECT
 public:
     Node();
 
@@ -23,6 +24,7 @@ public:
     };
 
     std::vector<Node*> connectedNodes;
+    std::vector<int> connectorWeights;
     Ip address;
     int packetIndex;
     // TODO routing table (probably hash table or stack)
@@ -30,8 +32,8 @@ public:
     void forwardPacket(packet* message);
 
 signals:
-    void packetDiscarded(packet* message);
-    void packetRecieved(packet* message);
+    void packetDiscarded();
+    void packetRecieved();
 };
 
 #endif // NODE_H
