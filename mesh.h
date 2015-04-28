@@ -26,9 +26,9 @@ namespace std
     };
 }
 
-class Mesh
+class Mesh : public QObject
 {
-
+    Q_OBJECT
 private:
     Node** nodeGrid;
     int gridSize;
@@ -41,7 +41,7 @@ private:
 
     void reversePath(std::queue<Ip>& path);
 
-    Node::packet currentMessage;
+    Node::packet* currentMessage;
     int CUR_DS_ID;
 
 public:
@@ -49,7 +49,7 @@ public:
     Mesh(size_t ds_id, size_t size);
 
     std::queue<Ip> findPath(Node* sender, Node* reciever);
-    Node::packet generatePacket();
+    Node::packet* generatePacket();
     void sendPacket(Node::packet* message);
 
 public slots:
@@ -57,7 +57,7 @@ public slots:
     void resendPacket();
 
     // on signal packetRecieved
-    void sendAck(Node::packet* message);
+    void sendAck();
 };
 
 #endif // MESH_H

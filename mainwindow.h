@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+#include "mesh.h"
+
 namespace Ui {
 class MainWindow;
 }
