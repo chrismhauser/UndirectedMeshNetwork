@@ -75,34 +75,36 @@ void Mesh::generateMap(size_t size /*= 75*/)
      */
 
     mapSize = size ^ 2;
-    std::vector<std::vector<Node>> tempNodeVect;
+    std::vector<std::vector<Node*>> tempNodeVect;
 
     // initialize size x size vector of nodes
-    tempNodeVect.resize(size);
     for(int i = 0; i < size; i++) {
-        tempNodeVect[i].resize(size);
+        for(int j = 0; j < size; j++) {
+            Node* myNode = new Node;
+            tempNodeVect[i].push_back(myNode);
+        }
     }
 
     // ip assigning occurs the same as the mesh abstraction (shout out Chris H.)
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-             tempNodeVect[i][j].address.setIp(0,0,i,j);
+             tempNodeVect[i][j]->address.setIp(0,0,i,j);
 
              // Unlike mesh, asymetric graph edges.  Average of 2.5 edges between a node and its peers.
              // Note that with the randomization strategy, there is a small possibility of isolated nodes.
              if (i > 0) {
                  // .625% chance of connection with neighbor
                  if ((rand() % 8 + 1) > 5)
-                    tempNodeVect[i][j].connectedNodes.push_back(&nodeGrid[i-1][j]);
+                    tempNodeVect[i][j]->connectedNodes.push_back(&nodeGrid[i-1][j]);
                  if ((rand() % 8 + 1) > 5)
-                    tempNodeVect[i-1][j].connectedNodes.push_back(&nodeGrid[i][j]);
+                    tempNodeVect[i-1][j]->connectedNodes.push_back(&nodeGrid[i][j]);
              }
 
              if (j > 0) {
                  if ((rand() % 8 + 1) > 5)
-                    tempNodeVect[i][j].connectedNodes.push_back(&nodeGrid[i][j-1]);
+                    tempNodeVect[i][j]->connectedNodes.push_back(&nodeGrid[i][j-1]);
                  if ((rand() % 8 + 1) > 5)
-                    tempNodeVect[i][j-1].connectedNodes.push_back(&nodeGrid[i][j]);
+                    tempNodeVect[i][j-1]->connectedNodes.push_back(&nodeGrid[i][j]);
              }
         }
     }
@@ -110,8 +112,8 @@ void Mesh::generateMap(size_t size /*= 75*/)
     // Iterate through tempNodeVect and push non-isolated nodes to the map
     for (size_t i = 0; i < size; i++) {
         for (size_t j = 0; j < size; j++) {
-            if (tempNodeVect[i][j].connectedNodes.size() > 0) {
-                nodeMap[tempNodeVect[i][j].address] = tempNodeVect[i][j];
+            if (tempNodeVect[i][j]->connectedNodes.size() > 0) {
+                nodeMap[tempNodeVect[i][j]->address] = tempNodeVect[i][j];
             }
         }
   }
@@ -184,7 +186,7 @@ Node::packet* Mesh::generatePacket()
          // Randomize sender
         advanceCount1 = rand() % nodeMap.size();
         std::advance(randTuple1, advanceCount1);
-        message.sender = &(randTuple1->second);
+        message->sender = randTuple1->second;
 
         // Different sender and reciever
         while(!pass) {
@@ -195,7 +197,7 @@ Node::packet* Mesh::generatePacket()
             if(!(advanceCount1 != advanceCount2))
                 pass = true;
         }
-        message.reciever = &(randTuple2->second);
+        message->reciever = randTuple2->second;
       }
     }
 

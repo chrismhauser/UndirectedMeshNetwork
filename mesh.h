@@ -35,7 +35,7 @@ private:
     Node** nodeGrid;
     int gridSize;
 
-    std::unordered_map<Ip, Node> nodeMap;
+    std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
 
     void generateGrid(size_t size = 256);
