@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include "tree.h"
 #include "mesh.h"
 
 int main(int argc, char *argv[])

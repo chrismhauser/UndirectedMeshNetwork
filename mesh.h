@@ -21,6 +21,7 @@ private:
     Node** nodeGrid;
     int gridSize;
 
+
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
 
@@ -31,6 +32,8 @@ private:
 
     Node::packet* currentMessage;
     int CUR_DS_ID;
+
+    void log(std::string& s);
 
 public:
     Mesh();

@@ -17,12 +17,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mesh.cpp \
     ip.cpp \
-    node.cpp
+    node.cpp \
+    tree.cpp
 
 HEADERS  += mainwindow.h \
     mesh.h \
     ip.h \
     node.h \
-    itoa.h
+    itoa.h \
+    tree.h
 
 FORMS    += mainwindow.ui
