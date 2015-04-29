@@ -142,7 +142,7 @@ void Mesh::reversePath(std::queue<Ip>& path)
 Node::packet* Mesh::generatePacket()
 {
     /* TODO
-    *   choose random sender and reciever (grid - done, map - not done)
+    *   choose random sender and reciever (grid - done, map - done)
     *   set packetId
     *   set random data (for loop random # of times, str += "data")
     */
