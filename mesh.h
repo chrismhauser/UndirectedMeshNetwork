@@ -7,6 +7,7 @@
 #include <stack>
 #include <algorithm>
 #include <iterator>
+#include <fstream>
 
 #include "ip.h"
 #include "node.h"
@@ -20,7 +21,7 @@ class Mesh : public QObject
 private:
     Node** nodeGrid;
     int gridSize;
-
+    std::ofstream out;
 
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
@@ -37,6 +38,7 @@ private:
 
 public:
     Mesh();
+    ~Mesh();
     Mesh(size_t ds_id, size_t size);
 
     std::queue<Ip> findPath(Node* sender, Node* reciever);

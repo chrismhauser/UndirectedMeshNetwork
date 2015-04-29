@@ -63,13 +63,13 @@ void tree::insertChild(node *parent, Ip ip, short connectionWeight)
 
                 if ((*it)->address == ip)
                    check->parent->children.erase(it);
+             }
 
-                // assign new values for the moved node
-                check->parent = parent;
-                check->weight = newWeight;
-                parent->children.push_back(check);
-                return;
-            }
+             // assign new values for the moved node
+             check->parent = parent;
+             check->weight = newWeight;
+             parent->children.push_back(check);
+             return;
         }
     }
 

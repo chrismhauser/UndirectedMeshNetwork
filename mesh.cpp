@@ -3,6 +3,9 @@
 
 Mesh::Mesh(){
     Mesh(0,256);
+    out.open("log.txt");
+    if(!out.is_open())
+        std::cout << "Error opening log file" << std::endl;
 }
 
 Mesh::Mesh(size_t ds_id, size_t size)
@@ -248,4 +251,12 @@ void Mesh::sendAck()
     ack->sender->forwardPacket(ack);
 }
 
+void Mesh::log(std::string& s)
+{
+
+}
+
+Mesh::~Mesh() {
+    out.close();
+}
 
