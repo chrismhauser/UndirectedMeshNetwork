@@ -18,6 +18,7 @@ tree::tree(Ip ip)
     head = new node;
     head->address = ip;
     head->weight = 0;
+    ptrVect.push_back(head);
 }
 
 tree::node* tree::findNode(Ip ip)
