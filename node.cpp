@@ -11,7 +11,11 @@ void Node::forwardPacket(packet* message) {
     if (difftime(now, message->timout) >= 0) {
         emit packetDiscarded();
     } else if (message->reciever->address == this->address) {
-        emit packetRecieved();
+        if(message->data == "Ack") {
+            message->sender->packetIndex++;
+        } else {
+            emit packetRecieved();
+        }
     } else {
         message->path.pop();
 

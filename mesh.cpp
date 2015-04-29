@@ -205,6 +205,22 @@ Node::packet* Mesh::generatePacket()
     }
 
     message->packetId = message->sender->packetIndex;
+
+    // Generate random data
+    for(int i=0; i<rand()%80; i++) {
+        char base;
+        switch(rand()%1)
+        {
+        case 0:
+            base = 'a';
+            break;
+        case 1:
+            base = 'A';
+            break;
+        }
+
+        message->data += base + rand()%26;
+    }
 }
 
 void Mesh::sendPacket(Node::packet* message)
