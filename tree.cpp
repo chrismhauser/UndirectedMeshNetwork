@@ -55,8 +55,8 @@ void tree::insertChild(node *parent, Ip ip, short connectionWeight)
 
         // if it's weight is larger, then move it around to the shorter path
         else {
-            // remove the node it's from parent's children
-            // iterator traversal is required for using erase() method
+            // first remove the node from it's parent's children
+            // note: iterator traversal is required here for using erase() method
             auto it = check->parent->children.begin();
             for (; it != check->parent->children.end(); it++) {
 
@@ -74,10 +74,11 @@ void tree::insertChild(node *parent, Ip ip, short connectionWeight)
 
     // if it's not already in the tree, then add it
     node* child = new node;
-    child->weight = newWeight;
     child->address = ip;
-    ptrVect.push_back(child);
+    child->parent = parent;
+    child->weight = newWeight;
     parent->children.push_back(child);
+    ptrVect.push_back(child);
 }
 
 tree::~tree()
