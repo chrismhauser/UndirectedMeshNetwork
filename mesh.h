@@ -28,7 +28,7 @@ private:
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
 
-    void generateGrid(size_t size = 256);
+    void generateGrid(size_t size = 2);
     void generateMap(size_t size = 75);
 
     void generateTree(Node* node);

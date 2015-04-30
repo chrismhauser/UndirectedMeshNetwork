@@ -5,6 +5,7 @@ tree::tree()
     head = new node;
     // Using a vector for memory allocation, because lazy
     ptrVect.push_back(head);
+    count = 1;
 }
 
 void tree::setHead(Ip ip)
@@ -21,7 +22,7 @@ Ip tree::getHead()
 tree::node* tree::findNode(Ip ip)
 {
     // TEST STATEMENT
-    std::cout << "findNode()" << std::endl;
+    std::cout << "findNode() call #" << count++ << std::endl;
 
     // return the head if it's the ip your looking for
     if (head->address == ip)

@@ -27,6 +27,7 @@ public:
     Ip getHead();
 
 private:
+    int count;
     node* head;
     std::vector<node*> ptrVect;
 };
