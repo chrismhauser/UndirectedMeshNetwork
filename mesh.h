@@ -11,6 +11,7 @@
 
 #include "ip.h"
 #include "node.h"
+#include "tree.h"
 
 #define DS_ID_GRID 0
 #define DS_ID_MAP 1
@@ -22,12 +23,15 @@ private:
     Node** nodeGrid;
     int gridSize;
     std::ofstream out;
+    tree syncTree;
 
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
 
     void generateGrid(size_t size = 256);
     void generateMap(size_t size = 75);
+
+    void generateTree(Node* node);
 
     void reversePath(std::queue<Ip>& path);
 

@@ -11,4 +11,6 @@ int main(int argc, char *argv[])
     w.show();
 
     return a.exec();
+    Mesh myMesh;
+    myMesh.generatePacket();
 }

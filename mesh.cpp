@@ -221,6 +221,11 @@ Node::packet* Mesh::generatePacket()
 
         message->data += base + rand()%26;
     }
+
+    // Set the syncTree head to the source node
+    syncTree.setHead(message->sender->address);
+    generateTree(message->sender);
+
 }
 
 void Mesh::sendPacket(Node::packet* message)
@@ -265,6 +270,24 @@ void Mesh::sendAck()
 
     // Send
     ack->sender->forwardPacket(ack);
+}
+
+// Call this to begin recursive tree generation
+void Mesh::generateTree(Node* node)
+{
+    // add children to the tree
+    for (size_t i = 0; i < node->connectedNodes.size(); i++)
+    {
+        // Insert a child of node (use findNode function to insert into the
+        // appropriate parent.
+        // Params 2 and 3 are the node's IP address and weight.
+        tree::node* parent = syncTree.findNode(node->address);
+        syncTree.insertChild(parent,
+                             node->connectedNodes.at(i)->address,
+                             node->connectorWeights.at(i));
+
+        generateTree(node->connectedNodes.at(i));
+    }
 }
 
 void Mesh::log(std::string& s)
