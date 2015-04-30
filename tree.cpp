@@ -23,6 +23,10 @@ tree::node* tree::findNode(Ip ip)
     // TEST STATEMENT
     std::cout << "findNode()" << std::endl;
 
+    // return the head if it's the ip your looking for
+    if (head->address == ip)
+        return head;
+
     node* parent = head;
     return findNode(ip, parent);
 }
