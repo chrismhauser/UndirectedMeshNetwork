@@ -7,18 +7,15 @@ tree::tree()
     ptrVect.push_back(head);
 }
 
-tree::tree(node* h)
+void tree::setHead(Ip ip)
 {
-    head = h;
-    ptrVect.push_back(head);
-}
-
-tree::tree(Ip ip)
-{
-    head = new node;
     head->address = ip;
     head->weight = 0;
-    ptrVect.push_back(head);
+}
+
+Ip tree::getHead()
+{
+    return head->address;
 }
 
 tree::node* tree::findNode(Ip ip)
@@ -80,6 +77,7 @@ std::queue<Ip> tree::findPath(Ip dest)
     return path_q;
 }
 
+
 // Find function for recursive treversal
 std::stack<Ip> tree::findPath(Ip dest, node* parent, std::stack<Ip> s)
 {
@@ -100,6 +98,47 @@ std::stack<Ip> tree::findPath(Ip dest, node* parent, std::stack<Ip> s)
     // if not found return nullptr
     return s;
 }
+
+// Used in conjunction with findNode to push children to the appropriate parent
+void tree::insertChild(node *parent, Ip ip, short connectionWeight)
+{
+    short newWeight = parent->weight + connectionWeight;
+
+    // first see if the node you want to add is already in the tree
+    node* check = findNode(ip);
+    if (check != nullptr) {
+
+        // return if ip exists and its weight is less than the new path
+        if (check->weight <= newWeight)
+            return;
+
+        // if it's weight is larger, then move it around to the shorter path
+        else {
+            // first remove the node from it's parent's children
+            // note: iterator traversal is required here for using erase() method
+            auto it = check->parent->children.begin();
+            for (; it != check->parent->children.end(); it++) {
+                if ((*it)->address == ip)
+                   check->parent->children.erase(it);
+             }
+
+             // assign new values for the moved node
+             check->parent = parent;
+             check->weight = newWeight;
+             parent->children.push_back(check);
+             return;
+        }
+    }
+
+    // if it's not already in the tree, then add it
+    node* child = new node;
+    child->address = ip;
+    child->parent = parent;
+    child->weight = newWeight;
+    parent->children.push_back(child);
+    ptrVect.push_back(child);
+}
+
 
 tree::~tree()
 {
