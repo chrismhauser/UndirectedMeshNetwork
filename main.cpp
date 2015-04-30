@@ -10,7 +10,19 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    return a.exec();
+    std::cout << "Test" << std::endl;
     Mesh myMesh;
-    myMesh.generatePacket();
+
+    std::cout << "Generate Path" << std::endl;
+    std::queue<Ip> path = myMesh.getCurMessage()->path;
+
+    std::cout << "Output Path" << std::endl;
+    std::queue<Ip> q = path;
+    while(!q.empty())
+    {
+        std::cout << '\t' << q.front().getIpString() << std::endl;
+        q.pop();
+    }
+
+    return a.exec();
 }

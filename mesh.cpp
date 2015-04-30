@@ -2,7 +2,9 @@
 #include "mesh.h"
 
 Mesh::Mesh(){
+    std::cout << "HERE" << std::endl;
     Mesh(0,256);
+    std::cout << "HERE2" << std::endl;
     out.open("log.txt");
     if(!out.is_open())
         std::cout << "Error opening log file" << std::endl;
@@ -25,7 +27,9 @@ Mesh::Mesh(size_t ds_id, size_t size)
         break;
     }
 
+    std::cout << "HURRRR" << std::endl;
     currentMessage = generatePacket();
+    std::cout << "HURRRR2" << std::endl;
     sendPacket(currentMessage);
 }
 
@@ -142,6 +146,12 @@ void Mesh::reversePath(std::queue<Ip>& path)
     }
 }
 
+std::queue<Ip> Mesh::findPath(Node *sender, Node *reciever)
+{
+    generateTree(sender);
+    return syncTree.findPath(reciever->address);
+}
+
 Node::packet* Mesh::generatePacket()
 {
     /* TODO
@@ -150,7 +160,8 @@ Node::packet* Mesh::generatePacket()
     *   set random data (for loop random # of times, str += "data")
     */
 
-    Node::packet* message;
+    std::cout << "TEST!" << std::endl;
+    Node::packet* message = new Node::packet;
 
     // Choose random sender & reciever
     switch(CUR_DS_ID)
@@ -164,6 +175,7 @@ Node::packet* Mesh::generatePacket()
         // Randomize Sender
         randX1 = rand() % gridSize;
         randY1 = rand() % gridSize;
+
         message->sender = &nodeGrid[randX1][randY1];
 
         // Make sure Sender and Reciever are different
@@ -203,6 +215,7 @@ Node::packet* Mesh::generatePacket()
         message->reciever = randTuple2->second;
       }
     }
+    std::cout << "TEST!2" << std::endl;
 
     message->packetId = message->sender->packetIndex;
 
@@ -222,9 +235,14 @@ Node::packet* Mesh::generatePacket()
         message->data += base + rand()%26;
     }
 
+    std::cout << "GURRRR" << std::endl;
     // Set the syncTree head to the source node
     syncTree.setHead(message->sender->address);
+    std::cout << "GURRRR2" << std::endl;
     generateTree(message->sender);
+    std::cout << "GURRRR3" << std::endl;
+
+    message->path = syncTree.findPath(message->reciever->address);
 
 }
 
@@ -240,6 +258,11 @@ void Mesh::sendPacket(Node::packet* message)
     message->timout = mktime(to);
 
     message->sender->forwardPacket(message);
+}
+
+Node::packet* Mesh::getCurMessage()
+{
+    return currentMessage;
 }
 
 void Mesh::resendPacket()

@@ -49,6 +49,8 @@ public:
     Node::packet* generatePacket();
     void sendPacket(Node::packet* message);
 
+    Node::packet* getCurMessage();
+
 public slots:
     // on signal packetDiscarded
     void resendPacket();
