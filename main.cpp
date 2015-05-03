@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    std::cout << "Test" << std::endl;
+    std::cout << "Creating a Mesh object in main.cpp." << std::endl;
     Mesh myMesh;
 
     std::cout << "Generate Path" << std::endl;

@@ -32,6 +32,7 @@ private:
     void generateMap(size_t size = 75);
 
     void generateTree(Node* node);
+    void generateMessagePath(Node* sender);
 
     void reversePath(std::queue<Ip>& path);
 

@@ -52,7 +52,7 @@ tree::node* tree::findNode(Ip ip, node* parent)
 std::queue<Ip> tree::findPath(Ip dest)
 {
     // TEST STATEMENT
-    std::cout << "findPath()" << std::endl;
+    std::cout << "tree::findPath() begins." << std::endl;
 
     node* parent = head;
     std::stack<Ip> s;
@@ -144,6 +144,16 @@ void tree::insertChild(node *parent, Ip ip, short connectionWeight)
     ptrVect.push_back(child);
 }
 
+void tree::print() {
+    print(head);
+}
+
+void tree::print(node* parent) {
+    for (size_t i = 0; i < parent->children.size(); ++i) {
+        std::cout << parent->children.at(i)->address.getIpString() << std::endl;
+        print(parent->children.at(i));
+    }
+}
 
 tree::~tree()
 {

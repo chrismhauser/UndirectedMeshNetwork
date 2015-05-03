@@ -25,6 +25,9 @@ public:
     void insertChild(node *parent, Ip ip, short connectionWeight);
     void setHead(Ip ip);
     Ip getHead();
+    void print();
+    void print(node* parent);
+
 
 private:
     int count;

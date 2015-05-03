@@ -1,13 +1,17 @@
 
 #include "mesh.h"
 
-Mesh::Mesh(){
-    std::cout << "HERE" << std::endl;
+Mesh::Mesh() {
+    // TEST STATEMENT
+    std::cout << "Mesh() default Constructor begins, calling Mesh(ds_id, size)." << std::endl;
+
     Mesh(0,20);
-    std::cout << "HERE2" << std::endl;
     out.open("log.txt");
     if(!out.is_open())
         std::cout << "Error opening log file" << std::endl;
+
+    // TEST STATEMENT
+    std::cout << "Mesh() default Constructor completed successfully." << std::endl;
 }
 
 Mesh::Mesh(size_t ds_id, size_t size)
@@ -27,9 +31,14 @@ Mesh::Mesh(size_t ds_id, size_t size)
         break;
     }
 
-    std::cout << "HURRRR" << std::endl;
+    // TEST STATEMENT
+    std::cout << "Generate Packet called." << std::endl;
+
     currentMessage = generatePacket();
-    std::cout << "HURRRR2" << std::endl;
+
+    // TEST STATEMENT
+    std::cout << "Send packet called." << std::endl;
+
     sendPacket(currentMessage);
 }
 
@@ -160,8 +169,8 @@ Node::packet* Mesh::generatePacket()
     *   set packetId
     *   set random data (for loop random # of times, str += "data")
     */
-
-    std::cout << "TEST!" << std::endl;
+    // TEST STATEMENT
+    std::cout << "generatePacket() #1." << std::endl;
     Node::packet* message = new Node::packet;
 
     // Choose random sender & reciever
@@ -216,7 +225,9 @@ Node::packet* Mesh::generatePacket()
         message->reciever = randTuple2->second;
       }
     }
-    std::cout << "TEST!2" << std::endl;
+
+    // TEST STATEMENT
+    std::cout << "Generate Packet #2.  (Random sender and reciever successful)." << std::endl;
 
     message->packetId = message->sender->packetIndex;
 
@@ -236,24 +247,30 @@ Node::packet* Mesh::generatePacket()
         message->data += base + rand()%26;
     }
 
-    std::cout << "GURRRR" << std::endl;
+    // TEST STATEMENT
+    std::cout << "Generate Packet #3.  Now generating SyncTree." << std::endl;
+
     // Set the syncTree head to the source node
     syncTree.setHead(message->sender->address);
-    std::stack<Ip> s;
-    s.push(message->sender->address);
-    std::cout << "GURRRR2" << std::endl;
+
+    // TEST STATEMENT
+    std::cout << "Generate Packet #4.  SyncTree head set." << std::endl;
+
     generateTree(message->sender);
-    std::cout << "GURRRR3" << std::endl;
 
+    // TEST STATEMENT
+    std::cout << "Generate Packet #5.  GenerateTree called successfully. Tree print:" << std::endl;
+    syncTree.print();
+
+    message->path = syncTree.findPath(message->reciever->address);
     std::queue<Ip> q = message->path;
-    std::cout << "TESTING" << std::endl;
-    while(!q.empty()) {
 
+    // TEST STATEMENT
+    std::cout << "Test: Popping off the message path que." << std::endl;
+    while(!q.empty()) {
         std::cout << q.front().getIpString() << std::endl;
         q.pop();
     }
-
-    message->path = syncTree.findPath(message->reciever->address);
 
 //    std::queue<Ip> tempPath;
 
@@ -319,8 +336,8 @@ void Mesh::sendAck()
 // Call this to begin recursive tree generation
 void Mesh::generateTree(Node* node)
 {
-    // TEST
-    std::cout << "generateTree()" << std::endl;
+    // TEST STATEMENT
+    std::cout << "GenerateTree() begins." << std::endl;
 
     // add children to the tree
     for (size_t i = 0; i < node->connectedNodes.size(); i++)
@@ -329,9 +346,9 @@ void Mesh::generateTree(Node* node)
         // appropriate parent.
         // Params 2 and 3 are the node's IP address and weight.
 
-        // Check if node is in tree
+        // TEST STATEMENT
+        std::cout << node->connectedNodes.at(i)->address.getIpString() << std::endl;
 
-std::cout << node->connectedNodes.at(i)->address.getIpString() << std::endl;
         // Add child to tree
         syncTree.insertChild(syncTree.findNode(node->address),
                              node->connectedNodes.at(i)->address,
@@ -343,6 +360,12 @@ std::cout << node->connectedNodes.at(i)->address.getIpString() << std::endl;
         if(node->connectedNodes.at(i)->connectedNodes.empty())
             generateTree(node->connectedNodes.at(i));
     }
+}
+
+// Generates the sender's path using the SyncTree.
+void Mesh::generateMessagePath(Node* sender)
+{
+
 }
 
 void Mesh::log(std::string& s)
