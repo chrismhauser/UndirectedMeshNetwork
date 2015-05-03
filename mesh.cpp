@@ -283,7 +283,6 @@ Node::packet* Mesh::generatePacket()
 //    }
 //    tempPath.push(tempNode->address);
 //    message->path = tempPath;
-
 }
 
 void Mesh::sendPacket(Node::packet* message)
