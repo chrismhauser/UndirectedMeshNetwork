@@ -5,7 +5,7 @@ Mesh::Mesh() {
     // TEST STATEMENT
     std::cout << "Mesh() default Constructor begins, calling Mesh(ds_id, size)." << std::endl;
 
-    Mesh(0,20);
+    Mesh(0,5);
     out.open("log.txt");
     if(!out.is_open())
         std::cout << "Error opening log file" << std::endl;
@@ -170,7 +170,7 @@ Node::packet* Mesh::generatePacket()
     *   set random data (for loop random # of times, str += "data")
     */
     // TEST STATEMENT
-    std::cout << "generatePacket() #1." << std::endl;
+    std::cout << "generatePacket #1.  Tree begins" << std::endl;
     Node::packet* message = new Node::packet;
 
     // Choose random sender & reciever
@@ -227,7 +227,9 @@ Node::packet* Mesh::generatePacket()
     }
 
     // TEST STATEMENT
-    std::cout << "Generate Packet #2.  (Random sender and reciever successful)." << std::endl;
+    std::cout << "Generate Packet #2.  (Random sender and reciever successful). ";
+    std::cout << "Sender: " << message->sender->address.getIpString() << " ";
+    std::cout << "Reciever: " << message->reciever->address.getIpString() << std::endl;
 
     message->packetId = message->sender->packetIndex;
 
