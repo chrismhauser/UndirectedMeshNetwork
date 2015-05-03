@@ -3,7 +3,7 @@
 
 Mesh::Mesh(){
     std::cout << "HERE" << std::endl;
-    Mesh(0,256);
+    Mesh(0,20);
     std::cout << "HERE2" << std::endl;
     out.open("log.txt");
     if(!out.is_open())
@@ -148,6 +148,7 @@ void Mesh::reversePath(std::queue<Ip>& path)
 
 std::queue<Ip> Mesh::findPath(Node *sender, Node *reciever)
 {
+    std::stack<Ip> s;
     generateTree(sender);
     return syncTree.findPath(reciever->address);
 }
@@ -238,11 +239,31 @@ Node::packet* Mesh::generatePacket()
     std::cout << "GURRRR" << std::endl;
     // Set the syncTree head to the source node
     syncTree.setHead(message->sender->address);
+    std::stack<Ip> s;
+    s.push(message->sender->address);
     std::cout << "GURRRR2" << std::endl;
     generateTree(message->sender);
     std::cout << "GURRRR3" << std::endl;
 
+    std::queue<Ip> q = message->path;
+    std::cout << "TESTING" << std::endl;
+    while(!q.empty()) {
+
+        std::cout << q.front().getIpString() << std::endl;
+        q.pop();
+    }
+
     message->path = syncTree.findPath(message->reciever->address);
+
+//    std::queue<Ip> tempPath;
+
+//    Node* tempNode = message->sender;
+//    for(int i=0; i<4; i++) {
+//        tempPath.push(tempNode->address);
+//        tempNode = tempNode->connectedNodes.front();
+//    }
+//    tempPath.push(tempNode->address);
+//    message->path = tempPath;
 
 }
 
@@ -298,18 +319,29 @@ void Mesh::sendAck()
 // Call this to begin recursive tree generation
 void Mesh::generateTree(Node* node)
 {
+    // TEST
+    std::cout << "generateTree()" << std::endl;
+
     // add children to the tree
     for (size_t i = 0; i < node->connectedNodes.size(); i++)
     {
         // Insert a child of node (use findNode function to insert into the
         // appropriate parent.
         // Params 2 and 3 are the node's IP address and weight.
-        tree::node* parent = syncTree.findNode(node->address);
-        syncTree.insertChild(parent,
+
+        // Check if node is in tree
+
+std::cout << node->connectedNodes.at(i)->address.getIpString() << std::endl;
+        // Add child to tree
+        syncTree.insertChild(syncTree.findNode(node->address),
                              node->connectedNodes.at(i)->address,
                              node->connectorWeights.at(i));
 
-        generateTree(node->connectedNodes.at(i));
+        // check if any of the node's children have already been added
+        //  - if not, add them
+        //  - else, continue
+        if(node->connectedNodes.at(i)->connectedNodes.empty())
+            generateTree(node->connectedNodes.at(i));
     }
 }
 

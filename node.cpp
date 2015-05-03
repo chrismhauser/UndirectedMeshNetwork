@@ -13,7 +13,9 @@ void Node::forwardPacket(packet* message) {
     } else if (message->reciever->address == this->address) {
         if(message->data == "Ack") {
             message->sender->packetIndex++;
+            std::cout << "ACK RECIEVED" <<std::endl;
         } else {
+            std::cout << "PACKET RECIEVED" <<std::endl;
             emit packetRecieved();
         }
     } else {
