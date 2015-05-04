@@ -9,6 +9,7 @@
 #include <iterator>
 #include <fstream>
 #include <utility>
+#include <time.h>
 
 #include "ip.h"
 #include "node.h"
@@ -39,6 +40,7 @@ private:
 
     void generateTree(Node* node);
     void generatePath();
+    void generateLogs(int path_count);
 
     // New attempt at tree building function
     void generateBuildQue(Node* node);

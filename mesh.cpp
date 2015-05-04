@@ -2,13 +2,16 @@
 #include "mesh.h"
 
 Mesh::Mesh() {
-    // TEST STATEMENT
-    std::cout << "Mesh() default Constructor begins, calling Mesh(ds_id, size)." << std::endl;
 
+    // Seed rand for more realisticly random data
+    // srand(time(NULL));
     Mesh(0,5);
+
     out.open("log.txt");
     if(!out.is_open())
         std::cout << "Error opening log file" << std::endl;
+
+
 }
 
 Mesh::Mesh(size_t ds_id, size_t size)
