@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     std::cout << "Creating a Mesh object in main.cpp." << std::endl;
     Mesh myMesh;
 
+    /*
     std::cout << "Generate Path" << std::endl;
     std::queue<Ip> path = myMesh.getCurMessage()->path;
 
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
         std::cout << '\t' << q.front().getIpString() << std::endl;
         q.pop();
     }
+    */
 
     return a.exec();
 }
