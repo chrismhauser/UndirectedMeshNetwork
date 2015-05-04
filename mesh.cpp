@@ -10,8 +10,6 @@ Mesh::Mesh() {
     out.open("log.txt");
     if(!out.is_open())
         std::cout << "Error opening log file" << std::endl;
-
-
 }
 
 Mesh::Mesh(size_t ds_id, size_t size)
@@ -228,114 +226,7 @@ void Mesh::generatePath()
     // TEST STATEMENT
     std::cout << "Building treeBuildQue." << std::endl;
     syncTree.setHead(message->sender->address);
-    generateBuildQue(message->sender);
-
-    message->path = syncTree.findPath(message->reciever->address);
-    std::queue<Ip> q = message->path;
-
-    // TEST STATEMENT
-    std::cout << "Test: Popping off the message path que." << std::endl;
-    while(!q.empty()) {
-        std::cout << q.front().getIpString() << std::endl;
-        q.pop();
-    }
-}
-
-Node::packet* Mesh::generatePacket()
-{
-    /* TODO
-    *   choose random sender and reciever (grid - done, map - done)
-    *   set packetId
-    *   set random data (for loop random # of times, str += "data")
-    */
-    // TEST STATEMENT
-    std::cout << "generatePacket #1.  Tree begins" << std::endl;
-    Node::packet* message = new Node::packet;
-
-    // Choose random sender & reciever
-    switch(CUR_DS_ID)
-    {
-    case DS_ID_GRID:
-      {
-        int randX1, randY1;
-        int randX2, randY2;
-        bool pass = false;
-
-        // Randomize Sender
-        randX1 = rand() % gridSize;
-        randY1 = rand() % gridSize;
-
-        message->sender = &nodeGrid[randX1][randY1];
-
-        // Make sure Sender and Reciever are different
-        while(!pass) {
-            // Randomize Reciever
-            randX2 = rand() % gridSize;
-            randY2 = rand() % gridSize;
-
-            if(!(randX1 == randX2 && randY1 == randY2))
-                pass = true;
-        }
-        message->reciever = &nodeGrid[randX2][randY2];
-
-        break;
-      }
-    case DS_ID_MAP:
-      {
-        bool pass = false;
-        auto randTuple1 = nodeMap.begin();
-        auto randTuple2 = nodeMap.begin();
-        int advanceCount1, advanceCount2;
-
-         // Randomize sender
-        advanceCount1 = rand() % nodeMap.size();
-        std::advance(randTuple1, advanceCount1);
-        message->sender = randTuple1->second;
-
-        // Different sender and reciever
-        while(!pass) {
-            // Randomize reciever
-            advanceCount2 = rand() % nodeMap.size();
-            std::advance(randTuple2, advanceCount2);
-
-            if(!(advanceCount1 != advanceCount2))
-                pass = true;
-        }
-        message->reciever = randTuple2->second;
-      }
-    }
-
-    // TEST STATEMENT
-    std::cout << "Generate Packet #2.  (Random sender and reciever successful). ";
-    std::cout << "Sender: " << message->sender->address.getIpString() << " ";
-    std::cout << "Reciever: " << message->reciever->address.getIpString() << std::endl;
-
-    message->packetId = message->sender->packetIndex;
-
-    // Generate random data
-    for(int i=0; i<rand()%80; i++) {
-        char base;
-        switch(rand()%1)
-        {
-        case 0:
-            base = 'a';
-            break;
-        case 1:
-            base = 'A';
-            break;
-        }
-
-        message->data += base + rand()%26;
-    }
-
-    // TEST STATEMENT
-    std::cout << "Generate Packet #3.  Building treeBuildQue." << std::endl;
-    syncTree.setHead(message->sender->address);
-    generateBuildQue(message->sender);
-
-    // TEST STATEMENT
-    std::cout << "Generate Packet #5.  GenerateTree called successfully. Tree print:" << std::endl;
-    syncTree.print();
+    generateTree(message->sender);
 
     message->path = syncTree.findPath(message->reciever->address);
     std::queue<Ip> q = message->path;
@@ -397,49 +288,7 @@ void Mesh::sendAck()
     ack->sender->forwardPacket(ack);
 }
 
-// Call this to begin recursive tree generation.  BROKEN FUCK THIS SHIT
-void Mesh::generateTree(Node* node)
-{
-    // TEST STATEMENT
-    std::cout << node->address.getIpString() << std::endl;
-
-    // Remove top peer (if it exists) to avoid infinite loop
-    if (node->address.getIpNum(2) > 0) {
-        // Only remove if were not on the edges, otherwise connectedNodes order is different
-        if (!(node->address.getIpNum(3) == 0) && !(node->address.getIpNum(3) == 4)) {
-            // it's stored at the connectedNodes index 0, hence begin
-            auto rmv = node->connectedNodes.begin();
-            std::cout << "Removing top connection for infinite recursion" << std::endl;
-            node->connectedNodes.erase(rmv);
-        }
-    }
-
-    // add children to the tree
-    for (size_t i = 0; i < node->connectedNodes.size(); i++)
-    {
-        // Remove the parent from the child's connectedNodes to avoid infinite loop
-        auto it = node->connectedNodes.at(i)->connectedNodes.begin();
-        auto end = node->connectedNodes.at(i)->connectedNodes.end();
-
-        for(;it != end; it++) {
-            if ((*it)->address.getIpString() == node->address.getIpString()) {
-                std::cout << "Removing parent for infinite recursion" << std::endl;
-                node->connectedNodes.at(i)->connectedNodes.erase(it);
-            }
-        }
-
-        // Insert a child of node (use findNode function to insert into the
-        // appropriate parent).
-        // Params 2 and 3 are the node's IP address and weight.
-        syncTree.insertChild(syncTree.findNode(node->address),
-                             node->connectedNodes.at(i)->address,
-                             node->connectorWeights.at(i));
-
-        generateTree(node->connectedNodes.at(i));
-    }
-}
-
-void Mesh::generateBuildQue(Node* head)
+void Mesh::generateTree(Node* head)
 {
     std::unordered_map<Node*, bool> isParent;
     std::vector<Node*> buffer[2];
@@ -478,20 +327,15 @@ void Mesh::generateBuildQue(Node* head)
             // add parent to isParent
             isParent[buffer[current][i]] = true;
         }
-        // If none of the parents yielded children to add, then break
+        // If none of the parents yielded children, then break
         if (allMapped == true) break;
         buffer[current].clear();
         std::swap(current, next);
     }
-    generateTree();
-}
-
-void Mesh::generateTree()
-{
     while (!treeBuildQue.empty())
     {
-        //std::cout << treeBuildQue.front().first->address.getIpString() << ", ";
-       // std::cout << treeBuildQue.front().second->address.getIpString() << std::endl;
+        // std::cout << treeBuildQue.front().first->address.getIpString() << ", ";
+        // std::cout << treeBuildQue.front().second->address.getIpString() << std::endl;
 
         // Insert a child of node (use findNode function to insert into the
         // appropriate parent).

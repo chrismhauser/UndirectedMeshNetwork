@@ -28,23 +28,16 @@ private:
     tree syncTree;
     std::queue<std::pair<Node*, Node*>> treeBuildQue;
 
-    // Gen tree stuff
-    int genTreeCount;
-    Node* recurLoopCheck;
-
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
 
     void generateGrid(size_t size = 2);
     void generateMap(size_t size = 75);
 
-    void generateTree(Node* node);
+    void generateTree(Node* head);
     void generatePath();
     void generateLogs(int path_count);
 
-    // New attempt at tree building function
-    void generateBuildQue(Node* node);
-    void generateTree();
 
 
     void reversePath(std::queue<Ip>& path);
