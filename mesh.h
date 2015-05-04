@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 #include <fstream>
+#include <utility>
 
 #include "ip.h"
 #include "node.h"
@@ -24,6 +25,11 @@ private:
     int gridSize;
     std::ofstream out;
     tree syncTree;
+    std::queue<std::pair<Node*, Node*>> treeBuildQue;
+
+    // Gen tree stuff
+    int genTreeCount;
+    Node* recurLoopCheck;
 
     std::unordered_map<Ip, Node*> nodeMap;
     int mapSize;
@@ -32,7 +38,12 @@ private:
     void generateMap(size_t size = 75);
 
     void generateTree(Node* node);
-    void generateMessagePath(Node* sender);
+    void generatePath();
+
+    // New attempt at tree building function
+    void generateBuildQue(Node* node);
+    void generateTree();
+
 
     void reversePath(std::queue<Ip>& path);
 

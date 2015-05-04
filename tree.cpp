@@ -21,9 +21,6 @@ Ip tree::getHead()
 
 tree::node* tree::findNode(Ip ip)
 {
-    // TEST STATEMENT
-    std::cout << "findNode() call #" << count++ << std::endl;
-
     // return the head if it's the ip your looking for
     if (head->address == ip)
         return head;
@@ -119,14 +116,16 @@ void tree::insertChild(node *parent, Ip ip, short connectionWeight)
 
         // if it's weight is larger, then move it around to the shorter path
         else {
+
             // first remove the node from it's parent's children
             // note: iterator traversal is required here for using erase() method
             auto it = check->parent->children.begin();
             for (; it != check->parent->children.end(); it++) {
-                if ((*it)->address == ip)
+                if ((*it)->address == ip) {
                    check->parent->children.erase(it);
+                   break;
+                }
              }
-
              // assign new values for the moved node
              check->parent = parent;
              check->weight = newWeight;
