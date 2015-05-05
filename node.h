@@ -31,10 +31,10 @@ public:
     Node();
 
     struct packet {
-        Node *sender, *reciever;
-        int packetId;
+        Node *sender, *reciever, *interm;
+        int packetId = 0;
         std::string data;
-        time_t timout;
+        time_t timout, sendTime;
         std::queue<Ip> path;
     };
 

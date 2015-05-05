@@ -10,6 +10,8 @@ tree::tree()
 
 void tree::setHead(Ip ip)
 {
+    head = new node;
+    ptrVect.push_back(head);
     head->address = ip;
     head->weight = 0;
 }

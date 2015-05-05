@@ -26,6 +26,10 @@ public:
         return true;
     }
 
+    bool operator!=(const Ip& rhs) const {
+        return !(*this == rhs);
+    }
+
 private:
     int* ipNums = new int[4];
 };
