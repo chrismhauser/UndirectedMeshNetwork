@@ -2,6 +2,7 @@
 
 Node::Node()
 {
+
 }
 
 void Node::forwardPacket(packet* message) {
